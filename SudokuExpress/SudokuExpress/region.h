@@ -2,6 +2,7 @@
 #include <iostream>
 
 typedef int matrizRegion[3][3];
+
 class region
 {
 private:

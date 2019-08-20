@@ -3,6 +3,7 @@
 #include "region.h"
 
 typedef region matrizTablero[3][3];
+
 class tablero
 {
 private:
@@ -10,9 +11,13 @@ private:
 
 public:
 	tablero();
+	void reiniciarMatriz(matrizRegion &matrizReg);
 	void inicializarTablero();
-	bool comprobarIguales(int pos[],int seleccion, int tamActual);
-	void crearMatriz(int posicion[], int valores[]);
-	void crearRegion();
+	bool comprobarFila();
+	bool comprobarColumna();
+	bool comprobarIgualesPosicion(int pos[],int seleccion, int tamActual);
+	bool comprobarIgualesValor(int valores[], int seleccion, int tamActual, int posiciones[]);
+	void crearMatriz(int posicion[], int valores[], matrizRegion &matrizReg);
+	void crearRegion(matrizRegion &matrizReg);
 };
 

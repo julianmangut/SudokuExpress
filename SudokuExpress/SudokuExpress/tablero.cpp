@@ -8,18 +8,42 @@ tablero::tablero()
 	inicializarTablero();
 }
 
-void tablero::inicializarTablero()
+void tablero::reiniciarMatriz(matrizRegion &matrizReg) 
 {
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-			matrizTab[i][j] = region(3 * i + j, m);
-	}
 
-	crearRegion();
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			matrizReg[i][j] = -1;
+		}
+	}
 }
 
-bool tablero::comprobarIguales(int pos[], int seleccion, int tamActual) {
+void tablero::inicializarTablero()
+{
+	matrizRegion matrizReg;
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++) {
+
+			reiniciarMatriz(matrizReg);
+
+			crearRegion(matrizReg);
+
+			matrizTab[i][j] = region(3 * i + j, matrizReg);
+		}
+	}
+}
+
+bool tablero::comprobarFila() {
+
+}
+
+bool tablero::comprobarColumna() {
+
+}
+
+bool tablero::comprobarIgualesPosicion(int pos[], int seleccion, int tamActual) {
 
 	bool iguales = false;
 
@@ -32,9 +56,21 @@ bool tablero::comprobarIguales(int pos[], int seleccion, int tamActual) {
 	return iguales;
 }
 
-void tablero::crearMatriz(int posicion[], int valores[]) {
+bool tablero::comprobarIgualesValor(int valores[], int seleccion, int tamActual, int posiciones[]) {
 
-	int matriz[3][3] = { {-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1} };
+	bool iguales = false;
+
+	for (int i = 0; i < tamActual && iguales == false; i++) {
+		if (valores[i] == seleccion) {
+			iguales = true;
+		}
+	}
+
+	return iguales;
+}
+
+void tablero::crearMatriz(int posicion[], int valores[], matrizRegion &matrizReg) {
+
 	int fila, columna;
 
 	for (int i = 0; i < 4; i++) {
@@ -43,15 +79,13 @@ void tablero::crearMatriz(int posicion[], int valores[]) {
 
 			fila = ceil(posicion[i] / 3);	//Puede ser que se pueda quitar el redondeo
 			columna = posicion[i] % 3;
-
-			matriz[columna][fila] = valores[i];
+			matrizReg[fila][columna] = valores[i];
 		}
 	}
 }
 
-void tablero::crearRegion() 
+void tablero::crearRegion(matrizRegion &matrizReg) 
 {
-	srand(time(NULL));	//Generador de semilla para random
 
 	int num = rand() % 4 + 1;	// Número de números con los que va a contar esa región
 	int pos[4], valores[4];	//cambiar 4 por num (encontrar el modo)
@@ -61,7 +95,7 @@ void tablero::crearRegion()
 		if (i < num) {
 
 			seleccion = rand() % 9;	//Posición en la que se va a encontrar cada número
-			while (comprobarIguales(pos, seleccion, i) == true) {
+			while (comprobarIgualesPosicion(pos, seleccion, i) == true) {
 				seleccion = rand() % 9;
 			}
 
@@ -75,15 +109,15 @@ void tablero::crearRegion()
 		if (i < num) {
 
 			seleccion = rand() % 9 + 1;	//Número que se va a poner en la región
-			while (comprobarIguales(valores, seleccion, i) == true) {
+			
+			while (comprobarIgualesValor(valores, seleccion, i, pos) == true) {
 				seleccion = rand() % 9 + 1;
 			}
-
 			valores[i] = seleccion;
 		}
 		else
 			valores[i] = -1; //Arreglar, se puede mejorar TODO
 	}
 
-	crearMatriz(pos, valores);
+	crearMatriz(pos, valores, matrizReg);
 }

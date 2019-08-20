@@ -2,7 +2,9 @@
 #include "tablero.h"
 using namespace std;
 
-void main() {
+int main() {
 
 	tablero t = tablero();
+
+	return 0;
 }
