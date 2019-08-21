@@ -22,3 +22,21 @@ region::region(int id, int matriz[3][3])
 		}
 	}
 }
+
+bool region::comprobarFila(int fila, int seleccion) {
+
+	int valor;
+
+	bool iguales = false;
+
+	for (int i = 0; i < 3 && iguales == false; i++) {
+
+		valor = matrizReg[fila][i];
+
+		if (seleccion == valor) {
+			iguales = true;
+		}
+	}
+
+	return iguales;
+}

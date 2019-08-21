@@ -12,4 +12,5 @@ private:
 public:
 	region();
 	region(int id, int matriz[3][3]);
+	bool comprobarFila(int fila, int seleccion);
 };

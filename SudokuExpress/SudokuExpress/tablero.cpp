@@ -28,27 +28,41 @@ void tablero::inicializarTablero()
 
 			reiniciarMatriz(matrizReg);
 
-			crearRegion(matrizReg);
+			crearRegion(matrizReg, 3*i+j);
 
 			matrizTab[i][j] = region(3 * i + j, matrizReg);
 		}
 	}
 }
 
-bool tablero::comprobarFila() {
+bool tablero::comprobarFila(int seleccion, int posActual, int posiciones[], int idRegion) {
 
+	int filaValor, filaRegion, columnaRegion;
+	region region;
+	bool iguales = false;
+
+	filaValor = ceil(posiciones[posActual] / 3);	//Puede ser que se pueda quitar el redondeo
+
+	filaRegion = ceil(idRegion / 3);
+	columnaRegion = idRegion % 3;
+
+	region = matrizTab[filaRegion][columnaRegion]; // CAMBIAR EL 0 0
+
+	iguales = region.comprobarFila(filaValor, seleccion);
+	
+	return iguales;
 }
 
 bool tablero::comprobarColumna() {
 
 }
 
-bool tablero::comprobarIgualesPosicion(int pos[], int seleccion, int tamActual) {
+bool tablero::comprobarIgualesPosicionValores(int posVal[], int seleccion, int tamActual) {
 
 	bool iguales = false;
 
 	for (int i = 0; i < tamActual && iguales == false; i++) {
-		if (pos[i] == seleccion) {
+		if (posVal[i] == seleccion) {
 			iguales = true;
 		}
 	}
@@ -56,18 +70,21 @@ bool tablero::comprobarIgualesPosicion(int pos[], int seleccion, int tamActual) 
 	return iguales;
 }
 
-bool tablero::comprobarIgualesValor(int valores[], int seleccion, int tamActual, int posiciones[]) {
+bool tablero::comprobarIguales(int comprobar[], int seleccion, int tamActual, int posiciones[], int idRegion) {
 
 	bool iguales = false;
 
-	for (int i = 0; i < tamActual && iguales == false; i++) {
-		if (valores[i] == seleccion) {
-			iguales = true;
+	iguales = comprobarIgualesPosicionValores(comprobar, seleccion, tamActual);
+
+	if (posiciones != NULL) {
+		if (iguales == false && (ceil(idRegion / 3)) != 0) {
+			iguales = comprobarFila(seleccion, tamActual, posiciones, idRegion - 1);
 		}
 	}
-
+	
 	return iguales;
 }
+
 
 void tablero::crearMatriz(int posicion[], int valores[], matrizRegion &matrizReg) {
 
@@ -84,7 +101,7 @@ void tablero::crearMatriz(int posicion[], int valores[], matrizRegion &matrizReg
 	}
 }
 
-void tablero::crearRegion(matrizRegion &matrizReg) 
+void tablero::crearRegion(matrizRegion &matrizReg, int idRegion) 
 {
 
 	int num = rand() % 4 + 1;	// Número de números con los que va a contar esa región
@@ -95,28 +112,25 @@ void tablero::crearRegion(matrizRegion &matrizReg)
 		if (i < num) {
 
 			seleccion = rand() % 9;	//Posición en la que se va a encontrar cada número
-			while (comprobarIgualesPosicion(pos, seleccion, i) == true) {
+			while (comprobarIguales(pos, seleccion, i, NULL, NULL) == true) {
 				seleccion = rand() % 9;
 			}
 
 			pos[i] = seleccion;
-		}
-		else
-			pos[i] = -1;	// Arreglar, se puede mejorar TODO
-	}
-
-	for (int i = 0; i < 4; i++) {
-		if (i < num) {
 
 			seleccion = rand() % 9 + 1;	//Número que se va a poner en la región
-			
-			while (comprobarIgualesValor(valores, seleccion, i, pos) == true) {
+
+			while (comprobarIguales(valores, seleccion, i, pos, idRegion) == true) {
 				seleccion = rand() % 9 + 1;
 			}
+
 			valores[i] = seleccion;
+
 		}
-		else
+		else {
+			pos[i] = -1;	// Arreglar, se puede mejorar TODO
 			valores[i] = -1; //Arreglar, se puede mejorar TODO
+		}
 	}
 
 	crearMatriz(pos, valores, matrizReg);

@@ -13,11 +13,11 @@ public:
 	tablero();
 	void reiniciarMatriz(matrizRegion &matrizReg);
 	void inicializarTablero();
-	bool comprobarFila();
+	bool comprobarFila(int seleccion, int posActual, int posiciones[], int idRegion);
 	bool comprobarColumna();
-	bool comprobarIgualesPosicion(int pos[],int seleccion, int tamActual);
-	bool comprobarIgualesValor(int valores[], int seleccion, int tamActual, int posiciones[]);
+	bool comprobarIgualesPosicionValores(int posVal[],int seleccion, int tamActual);
+	bool comprobarIguales(int comprobar[], int seleccion, int tamActual, int posiciones[], int idRegion);
 	void crearMatriz(int posicion[], int valores[], matrizRegion &matrizReg);
-	void crearRegion(matrizRegion &matrizReg);
+	void crearRegion(matrizRegion &matrizReg, int idRegion);
 };
 
